@@ -1,9 +1,14 @@
 # Herein lie the description of the data
 ## **Primary Dataset**
-* LocationDimensionID
-* DepartmentDimensionID
-* DateDimensionID
+**Identifiers**
+* LocationDimensionID (Unique Store Identifier)
+* DepartmentDimensionID (Unique Department Identifier)
+* DateDimensionID (Date like YYYYMM)
+
+**Cash In**
 * Sales
+
+**Cash Out**
 * Acc. Rec. Overhead
 * Accts. Receivable
 * Adv - Direct Mail
@@ -100,8 +105,8 @@
 * Wages
 * Workers Compensation
 
-## Location Heirarchy Data
-* LocationDimensionID
+## Location Heirarchy Data (Arbitrary Mapping Data)
+* LocationDimensionID (Unique Store Identifier)
 * City_Key
 * State_Key
 * Zip_Key
