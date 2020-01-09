@@ -6,20 +6,14 @@
 
 `pip install -r requirements.txt`
 
-**To get Rmd into a notebook:**
+**To convert Rmd into a Jupyter notebook:**
 
 `jupytext --to notebook notebook.md`
 
 Example: `jupytext --to notebook DataCleaning.Rmd`
 
+For more information, check out:
 
-## Project Goals
-*
+https://towardsdatascience.com/version-control-with-jupyter-notebooks-f096f4d7035a 
 
-## Intended Deliverables
-* 
 
-## Input Files
-(Input files are not stored on the cloud, as they contain)proprietary information
-* DrakeClassProjectData.csv
-* LocationDimHierarchyIDs.csv
