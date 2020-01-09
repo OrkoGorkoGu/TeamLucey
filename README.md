@@ -6,6 +6,13 @@
 
 `pip install -r requirements.txt`
 
+**To get Rmd into a notebook:**
+
+`jupytext --to notebook notebook.md`
+
+Example: `jupytext --to notebook DataCleaning.Rmd`
+
+
 ## Project Goals
 *
 
