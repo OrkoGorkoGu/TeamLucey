@@ -74,53 +74,36 @@ location = location.rename(columns={'datedimensionid': 'FirstMonth'})
 tmp = store.groupby('locationdimensionid', as_index=0)[['datedimensionid']].max()
 location = pd.merge(location, tmp, on=['locationdimensionid','locationdimensionid'])
 location = location.rename(columns={'datedimensionid': 'LastMonth'})
+
+# Free the memory; free the people!
+tmp = None
 ```
 
 ```{python}
 # Create an Expense table
-expenses = pd.DataFrame()
-i = 0
-for idx,row in store.iterrows():
-    if i==10:
-        break
-    #print(row)
-    #continue
-    expenses = expenses.append(
-        {
-            'StoreID': row['locationdimensionid']
-            ,'DeptID': row['departmentdimensionid']
-            ,'MonthEnd': row['datedimensionid']
-            ,'Expense': ''
-            ,'Amount': ''
-        }
-        ,ignore_index=1
-    )
-    i += 1
-```
+# Convert data to a more structured format
+expenses = store.melt(
+    id_vars=['locationdimensionid','departmentdimensionid','datedimensionid']
+    , var_name='Category'
+    , value_name='Amount'
+)
 
-```{python}
-expenses
-```
+store = None
 
-```{python}
-# Create an Expense table
-expenses = pd.DataFrame()
-for row in store.itertuples():
-    for key in row._fields:
-        if not key in ['locationdimensionid','departmentdimensionid','datedimensionid','Index'] and not pd.isna(getattr(row,key)):
-            expenses = expenses.append(
-                {
-                    'StoreID': getattr(row, 'locationdimensionid')
-                    ,'DeptID': getattr(row, 'departmentdimensionid')
-                    ,'MonthEnd': getattr(row, 'datedimensionid')
-                    ,'Expense': key
-                    ,'Amount': -getattr(row,key) if key!='sales' else getattr(row,key)
-                }
-                ,ignore_index=1
-            )
+# Remove null values
+expenses = expenses.dropna(subset=['Amount'])
 
-```
+# Improve column Names
+expenses = expenses.rename(columns={
+    'datedimensionid': 'ValDate'
+    , 'locationdimensionid': 'StoreID'
+    , 'departmentdimensionid': 'DeptID'
+})
 
-```{python}
-expenses
+# Change the expenses to be negative values
+expenses.loc[expenses['Category']!='sales','Amount'] *= -1
+
+# Output it
+expenses.to_csv('c:/users/alathan/desktop/Expenses.txt', header = True, index = False, sep='\t')
+location.to_csv('c:/users/alathan/desktop/StoreInfo.txt', header = True, index = False, sep='\t')
 ```
