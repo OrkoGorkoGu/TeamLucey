@@ -5,6 +5,10 @@
 * DepartmentDimensionID (Unique Department Identifier)
 * DateDimensionID (Date like YYYYMM)
 
+**Point-In-Time Values**
+* Supplies Beginning Inventory
+* Supplies Ending Inventory
+
 **Cash In**
 * Sales
 
@@ -84,7 +88,7 @@
 * Repairs - Maint. Contr.
 * Sign Service
 * Software Maint.
-* Store Loss
+* _Store Loss_
 * Supplies
 * Supplies - C&S/Eng
 * Supplies - DP
@@ -93,8 +97,6 @@
 * Supplies - Office
 * Supplies - Print Shop
 * Supplies - Sign Shop
-* Supplies Beginning Inventory
-* Supplies Ending Inventory
 * Telephone
 * Trash Hauling
 * Travel
