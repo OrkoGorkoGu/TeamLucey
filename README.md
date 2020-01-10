@@ -12,8 +12,6 @@
 
 Example: `jupytext --to notebook DataCleaning.Rmd`
 
-For more information, check out:
+For more information, check out:    
 
 https://towardsdatascience.com/version-control-with-jupyter-notebooks-f096f4d7035a 
-
-
