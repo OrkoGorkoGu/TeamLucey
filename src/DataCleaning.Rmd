@@ -80,30 +80,87 @@ tmp = None
 ```
 
 ```{python}
-# Create an Expense table
-# Convert data to a more structured format
-expenses = store.melt(
+d1 = store[0:int(len(store) / 5) * 1]
+d2 = store[int(len(store) / 5) * 1:int(len(store) / 5) * 2]
+d3 = store[int(len(store) / 5) * 2:int(len(store) / 5) * 3]
+d4 = store[int(len(store) / 5) * 3:int(len(store) / 5) * 4]
+d5 = store[int(len(store) / 5) * 4:]
+
+store = None
+```
+
+```{python}
+exp1 = d1.melt(
     id_vars=['locationdimensionid','departmentdimensionid','datedimensionid']
     , var_name='Category'
     , value_name='Amount'
 )
-
-store = None
-
 # Remove null values
-expenses = expenses.dropna(subset=['Amount'])
+exp1 = exp1.dropna(subset=['Amount'])
+exp1.loc[exp1['Category']!='sales','Amount'] *= -1
 
+exp2 = d2.melt(
+    id_vars=['locationdimensionid','departmentdimensionid','datedimensionid']
+    , var_name='Category'
+    , value_name='Amount'
+)
+exp2 = exp2.dropna(subset=['Amount'])
+exp2.loc[exp2['Category']!='sales','Amount'] *= -1
+
+exp3 = d3.melt(
+    id_vars=['locationdimensionid','departmentdimensionid','datedimensionid']
+    , var_name='Category'
+    , value_name='Amount'
+)
+exp3 = exp3.dropna(subset=['Amount'])
+exp3.loc[exp3['Category']!='sales','Amount'] *= -1
+
+exp4 = d4.melt(
+    id_vars=['locationdimensionid','departmentdimensionid','datedimensionid']
+    , var_name='Category'
+    , value_name='Amount'
+)
+exp4 = exp4.dropna(subset=['Amount'])
+exp4.loc[exp4['Category']!='sales','Amount'] *= -1
+
+exp5 = d5.melt(
+    id_vars=['locationdimensionid','departmentdimensionid','datedimensionid']
+    , var_name='Category'
+    , value_name='Amount'
+)
+exp5 = exp5.dropna(subset=['Amount'])
+exp5.loc[exp5['Category']!='sales','Amount'] *= -1
+```
+
+```{python}
+exp1 = pd.concat([exp1, exp2,])
+exp2 = None
+```
+
+```{python}
+exp2 = pd.concat([exp3, exp4,])
+exp3 = None
+exp4 = None
+```
+
+```{python}
+exp3 = exp5
+exp5 = None
+```
+
+```{python}
 # Improve column Names
-expenses = expenses.rename(columns={
+exp1 = exp1.rename(columns={
     'datedimensionid': 'ValDate'
     , 'locationdimensionid': 'StoreID'
     , 'departmentdimensionid': 'DeptID'
 })
 
-# Change the expenses to be negative values
-expenses.loc[expenses['Category']!='sales','Amount'] *= -1
+# Output to file. This is a terrible way to do things, but I don't have enough memory so 
+exp1.to_csv('c:/users/alathan/desktop/Expenses.txt', index = False, sep = '\t')
+exp2.to_csv('c:/users/alathan/desktop/Expenses.txt', index = False, sep = '\t', mode = 'a', header = 0)
+exp3.to_csv('c:/users/alathan/desktop/Expenses.txt', index = False, sep = '\t', mode = 'a', header = 0)
 
-# Output it
-expenses.to_csv('c:/users/alathan/desktop/Expenses.txt', header = True, index = False, sep='\t')
+# Output Store info to file too
 location.to_csv('c:/users/alathan/desktop/StoreInfo.txt', header = True, index = False, sep='\t')
 ```
