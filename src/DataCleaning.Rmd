@@ -18,9 +18,6 @@ jupyter:
 ### Package Requirements ###
 import pandas as pd
 import numpy as np
-from IPython.display import display
-pd.max_columns = None
-pd.max_rows = None
 ```
 
 ```{python}
@@ -57,7 +54,6 @@ store.columns = store.columns.str.replace('/','')
 store.columns = store.columns.str.replace('&','')
 
 store['locationdimensionid'] = store['locationdimensionid'].astype(str)
-store
 ```
 
 ```{python}
@@ -163,11 +159,22 @@ exp1 = exp1.rename(columns={
     , 'locationdimensionid': 'StoreID'
     , 'departmentdimensionid': 'DeptID'
 })
+location = location.rename(columns={
+    'locationdimensionid': 'storeID'
+})
 
 # Output to file. This is a terrible way to do things, but I don't have enough memory so 
 exp1.to_csv('c:/users/alathan/desktop/Expenses.txt', index = False, sep = '\t')
 exp2.to_csv('c:/users/alathan/desktop/Expenses.txt', index = False, sep = '\t', mode = 'a', header = 0)
 exp3.to_csv('c:/users/alathan/desktop/Expenses.txt', index = False, sep = '\t', mode = 'a', header = 0)
+```
+
+```{python}
+# Fill in NA for cities and states
+all_zips = location.groupby(['city_key', 'state_key','zip_key']).size().reset_index().drop(columns=[0])
+# Will drop 210 in favor of 56 for zip 53 (53 has more)
+location = location.drop(['state_key', 'city_key'], axis=1)
+location = location.merge(all_zips.drop(index=210)[['zip_key', 'state_key', 'city_key']])
 
 # Output Store info to file too
 location.to_csv('c:/users/alathan/desktop/StoreInfo.txt', header = True, index = False, sep='\t')
