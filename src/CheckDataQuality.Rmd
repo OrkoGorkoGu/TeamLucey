@@ -13,5 +13,76 @@ jupyter:
 ---
 
 ```{python}
+# %autosave 0
 
+### Package Requirements ###
+import pandas as pd
+import numpy as np
+from IPython.display import display
+pd.set_option('display.max_columns', 100)
+pd.set_option('display.max_rows', 1000)
+```
+
+```{python}
+### Data Import ###
+
+## Enter file location here ##
+infile = 'c:/users/alathan/desktop/Expenses.txt'
+infile2 = 'c:/users/alathan/desktop/StoreInfo.txt'
+
+# Read in the data
+expenses = pd.read_csv(infile, sep = '\t')
+storeInfo = pd.read_csv(infile2, sep = '\t')
+
+# make all columns lowercase
+expenses.columns = expenses.columns.str.lower()
+storeInfo.columns = storeInfo.columns.str.lower()
+```
+
+```{python}
+storeInfo.loc[storeInfo['storesize']=='Unknown']
+bads = storeInfo.loc[storeInfo['city_key'].isna()]
+# if 22-23 then restaurants
+# 15 is a restaurant (probably)
+# Get unique city state and zip
+nan_zips = storeInfo.loc[storeInfo['city_key'].isna(), 'zip_key']
+nan_zips
+all_zips = storeInfo.groupby(['state_key','zip_key']).size().reset_index().drop(columns=[0])
+all_zips.loc[all_zips['zip_key'].isin(nan_zips)]
+
+storeInfo = storeInfo.dropna(subset=['city_key'])
+bads = bads.merge(all_zips.loc[all_zips['zip_key'].isin(nan_zips)], on = 'zip_key').drop('state_key_x', axis=1)
+bads = bads.rename(columns={'state_key_x': 'state_key'})
+```
+
+```{python}
+storeInfo.loc[storeInfo['storesize']=='Unknown']
+bads = storeInfo.loc[storeInfo['city_key'].isna()]
+# if 22-23 then restaurants
+# 15 is a restaurant (probably)
+# Get unique city state and zip
+nan_zips = storeInfo.loc[storeInfo['city_key'].isna(), 'zip_key']
+nan_zips
+all_zips = storeInfo.groupby(['city_key', 'state_key','zip_key', 'regionid']).size().reset_index().drop(columns=[0])
+all_zips.sort_values(by='zip_key')
+print(len(storeInfo['zip_key'].unique()))
+print(len(storeInfo.loc[storeInfo['city_key'].isna()]['zip_key'].unique()))
+all_zips[all_zips['regionid']==3]
+
+```
+
+```{python}
+x = expenses['Category'].unique()
+y = expenses.loc[
+    (expenses['Amount']>0)& (expenses['Category']!='sales') | (expenses['Amount']<0) 
+    &(expenses['Category']=='sales')]['Category'
+].unique()
+
+for i in x:
+    if i not in y:
+        print(i)
+```
+
+```{python}
+storeInfo.loc[storeInfo['new_key']==2]
 ```

@@ -18,6 +18,9 @@ jupyter:
 ### Package Requirements ###
 import pandas as pd
 import numpy as np
+from IPython.display import display
+pd.max_columns = None
+pd.max_rows = None
 ```
 
 ```{python}
@@ -53,6 +56,7 @@ store.columns = store.columns.str.replace('-','')
 store.columns = store.columns.str.replace('/','')
 store.columns = store.columns.str.replace('&','')
 
+store['locationdimensionid'] = store['locationdimensionid'].astype(str)
 store
 ```
 
@@ -63,8 +67,8 @@ store
 print(str(len(store['datedimensionid'].unique())) + " months of data")
 print(str(len(store['locationdimensionid'].unique())) + " different stores")
 
-# Sort it by date
-store = store.sort_values(by='datedimensionid', ascending=1)
+# Sort it by date, store, dept
+store = store.sort_values(by=['datedimensionid', 'locationdimensionid', 'departmentdimensionid'])#, ascending=1)
 
 # Add open and close date to store info
 tmp = store.groupby('locationdimensionid', as_index=0)[['datedimensionid']].min()
@@ -75,8 +79,12 @@ tmp = store.groupby('locationdimensionid', as_index=0)[['datedimensionid']].max(
 location = pd.merge(location, tmp, on=['locationdimensionid','locationdimensionid'])
 location = location.rename(columns={'datedimensionid': 'LastMonth'})
 
+# Fill in zip and city for locations
+
+
 # Free the memory; free the people!
 tmp = None
+
 ```
 
 ```{python}
@@ -97,7 +105,7 @@ exp1 = d1.melt(
 )
 # Remove null values
 exp1 = exp1.dropna(subset=['Amount'])
-exp1.loc[exp1['Category']!='sales','Amount'] *= -1
+exp1.loc[~(exp1['Category'].isin(['sales', 'acctsreceivable'])),'Amount'] *= -1
 
 exp2 = d2.melt(
     id_vars=['locationdimensionid','departmentdimensionid','datedimensionid']
@@ -105,7 +113,7 @@ exp2 = d2.melt(
     , value_name='Amount'
 )
 exp2 = exp2.dropna(subset=['Amount'])
-exp2.loc[exp2['Category']!='sales','Amount'] *= -1
+exp2.loc[~(exp2['Category'].isin(['sales', 'acctsreceivable'])),'Amount'] *= -1
 
 exp3 = d3.melt(
     id_vars=['locationdimensionid','departmentdimensionid','datedimensionid']
@@ -113,7 +121,7 @@ exp3 = d3.melt(
     , value_name='Amount'
 )
 exp3 = exp3.dropna(subset=['Amount'])
-exp3.loc[exp3['Category']!='sales','Amount'] *= -1
+exp3.loc[~(exp3['Category'].isin(['sales', 'acctsreceivable'])),'Amount'] *= -1
 
 exp4 = d4.melt(
     id_vars=['locationdimensionid','departmentdimensionid','datedimensionid']
@@ -121,7 +129,7 @@ exp4 = d4.melt(
     , value_name='Amount'
 )
 exp4 = exp4.dropna(subset=['Amount'])
-exp4.loc[exp4['Category']!='sales','Amount'] *= -1
+exp4.loc[~(exp4['Category'].isin(['sales', 'acctsreceivable'])),'Amount'] *= -1
 
 exp5 = d5.melt(
     id_vars=['locationdimensionid','departmentdimensionid','datedimensionid']
@@ -129,7 +137,7 @@ exp5 = d5.melt(
     , value_name='Amount'
 )
 exp5 = exp5.dropna(subset=['Amount'])
-exp5.loc[exp5['Category']!='sales','Amount'] *= -1
+exp5.loc[~(exp5['Category'].isin(['sales', 'acctsreceivable'])),'Amount'] *= -1
 ```
 
 ```{python}

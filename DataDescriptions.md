@@ -9,12 +9,12 @@
 * Supplies Beginning Inventory
 * Supplies Ending Inventory
 
-**Cash In**
+**Capital In**
 * Sales
-
-**Cash Out**
-* Acc. Rec. Overhead
 * Accts. Receivable
+
+**Capital out**
+* Acc. Rec. Overhead
 * Adv - Direct Mail
 * Adv - General
 * Adv - Image TV and Radio I/C
